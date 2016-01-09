@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Hotels List</string>
+    <string name="all_hotels">All</string>
+    <string name="pay_now_hotels">Pay Now</string>
+    <string name="pay_later_hotels">Pay Later</string>
+    <string name="hotle_payment">hotel payment</string>
+    <string name="hotel_name">Hotel Name</string>
+    <string name="avg_amount">123 $</string>
+    <string name="distance">distance</string>
+    <string name="avg_per_night">AVG/NIGHT</string>
+</resources>
