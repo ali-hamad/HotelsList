@@ -16,8 +16,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * Created by Ali on 1/9/2016.
@@ -28,27 +26,27 @@ public class MyAdapter extends ArrayAdapter<Hotel> {
 
     public MyAdapter(Context context, Hotel[] values) {
 
-        super(context, R.layout.hotel_layout,values);
-        hotelValues=values;
+        super(context, R.layout.hotel_layout, values);
+        hotelValues = values;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        LayoutInflater theInflater= LayoutInflater.from(getContext());
+        LayoutInflater theInflater = LayoutInflater.from(getContext());
 
-        View theView=theInflater.inflate(R.layout.hotel_layout, parent, false);
+        View theView = theInflater.inflate(R.layout.hotel_layout, parent, false);
 
 
-        ImageView hotelImage=(ImageView)theView.findViewById(R.id.image_hotel);
-        TextView name=(TextView)theView.findViewById(R.id.name_hotel_textView);
-        TextView avgPriceRating=(TextView)theView.findViewById(R.id.avgRating_hotel_textView);
-        TextView distance=(TextView)theView.findViewById(R.id.distance_hotel_textView);
-        RatingBar rating=(RatingBar)theView.findViewById(R.id.ratingBar);
-        TextView payment=(TextView)theView.findViewById(R.id.payment_textView);
+        ImageView hotelImage = (ImageView) theView.findViewById(R.id.image_hotel);
+        TextView name = (TextView) theView.findViewById(R.id.name_hotel_textView);
+        TextView avgPriceRating = (TextView) theView.findViewById(R.id.avgRating_hotel_textView);
+        TextView distance = (TextView) theView.findViewById(R.id.distance_hotel_textView);
+        RatingBar rating = (RatingBar) theView.findViewById(R.id.ratingBar);
+        TextView payment = (TextView) theView.findViewById(R.id.payment_textView);
 
-        //nothing
-        TextView avgNightStatement=(TextView)theView.findViewById(R.id.avgStatement_hotel_textView);
+        //nothing to do
+        TextView avgNightStatement = (TextView) theView.findViewById(R.id.avgStatement_hotel_textView);
 
 
         name.setText(hotelValues[position].getName().toString());
@@ -58,16 +56,17 @@ public class MyAdapter extends ArrayAdapter<Hotel> {
 
         hotelImage.setImageURI(Uri.parse(hotelValues[position].getCoverImage().toString()));
 
-        if(hotelValues[position].is_cardLess()){
+        if (hotelValues[position].is_cardLess()) {
             payment.setText("card less");
-            payment.setBackgroundColor(Color.parseColor("#00FF99"));
-        }else if(hotelValues[position].isPost_paid()){
+            payment.setBackgroundColor(Color.parseColor("#0066FF"));
+
+        } else if (hotelValues[position].isPost_paid()) {
             payment.setText("Pay at hotel");
-            payment.setBackgroundColor(Color.parseColor("#0033FF"));
-        }
-        else if(hotelValues[position].isPre_paid()){
+            payment.setBackgroundColor(Color.parseColor("#00FF66"));
+
+        } else if (hotelValues[position].isPre_paid()) {
             payment.setText("Pay Now");
-            payment.setBackgroundColor(0xF00000);
+            payment.setBackgroundColor(Color.parseColor("#FF9966"));
         }
 
 

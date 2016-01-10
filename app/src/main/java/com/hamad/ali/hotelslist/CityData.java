@@ -4,6 +4,8 @@ import java.util.List;
 
 /**
  * Created by Ali on 1/9/2016.
+ *
+ * this is class will hold city object which holds the hotels list back from the json url
  */
 public class CityData {
 

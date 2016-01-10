@@ -1,5 +1,7 @@
 package com.hamad.ali.hotelslist;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -32,40 +33,56 @@ public class MainActivity extends AppCompatActivity {
     Hotel[] hotelFinal;
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        finish();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+        //checks the internet connection
+        if (isNetworkConnected()) {
+
+            //if the connection available call fill AsyncTask to fetch hotels data in background
+            new FillData().execute();
+        } else {
+
+            //if there is no connection available change the background image to no internet connection
+            ImageView backgroundImg = (ImageView) findViewById(R.id.loading_temp_img);
+            backgroundImg.setImageResource(R.drawable.yamsafer_no_internet);
+        }
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected void onStop() {
+        super.onStop();
+        //made sure nothing left behind
+        finish();
+    }
 
-        new fillData().execute();
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        }
+        return cm.getActiveNetworkInfo() != null;
+    }
 
-    class fillData extends AsyncTask<Void, Void, Void> {
+    //FillData AsyncTask to fetch hotels data in background
+    class FillData extends AsyncTask<Void, Void, Void> {
 
         CityData response;
         ResponseData responseHotels;
         List<Hotel> list;
 
-        String str="wait";
-
         @Override
         protected Void doInBackground(Void... params) {
+
+            //start the connection and fetching hotels data
             InputStream source = retrieveStream(url);
             Gson gson = new Gson();
             Reader reader = new InputStreamReader(source);
 
-            response=gson.fromJson(reader, CityData.class);
-
-            responseHotels=response.getCity();
-
-            list=responseHotels.getData();
-
+            //parsing the json response to extract the hotels list data
+            response = gson.fromJson(reader, CityData.class);
+            responseHotels = response.getCity();
+            list = responseHotels.getData();
 
             return null;
         }
@@ -75,65 +92,53 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            int count=0,i=0;
-            for(Hotel hotel:list){
-                count++;
-            }
-            hotelFinal=new Hotel[count];
+            //initialize the hotels list
+            hotelFinal = new Hotel[list.size()];
 
-            for(Hotel hotel:list){
-                hotelFinal[i]=hotel;
+            //fill the hotels list to pass it to the list view adapter
+            int i=0;
+            for (Hotel hotel : list) {
+                hotelFinal[i] = hotel;
                 i++;
             }
-            ListAdapter theAdapter = new MyAdapter(getApplicationContext(), hotelFinal);
-            ListView theListView = (ListView) findViewById(R.id.hotels_listView);
-            theListView.setAdapter(theAdapter);
-            ImageView loadingImg=(ImageView)findViewById(R.id.loading_temp_img);
-            loadingImg.setVisibility(View.GONE);
 
-
+            //fill the list view with hotels data
+            fillHotelsListView();
         }
 
+        //fetching response stream
         private InputStream retrieveStream(String url) {
 
             DefaultHttpClient client = new DefaultHttpClient();
-
             HttpGet getRequest = new HttpGet(url);
-
             try {
-
                 HttpResponse getResponse = client.execute(getRequest);
-
                 final int statusCode = getResponse.getStatusLine().getStatusCode();
-
                 if (statusCode != HttpStatus.SC_OK) {
-
                     Log.w(getClass().getSimpleName(),
-
                             "Error " + statusCode + " for URL " + url);
-
                     return null;
-
                 }
-
                 HttpEntity getResponseEntity = getResponse.getEntity();
 
                 return getResponseEntity.getContent();
 
-            }
-
-            catch (IOException e) {
-
+            } catch (IOException e) {
                 getRequest.abort();
-
                 Log.w(getClass().getSimpleName(), "Error for URL " + url, e);
-
             }
-
             return null;
-
         }
+    }
 
+    //fill the list view with hotels data and show it
+    private void fillHotelsListView() {
+        ListAdapter theAdapter = new MyAdapter(getApplicationContext(), hotelFinal);
+        ListView theListView = (ListView) findViewById(R.id.hotels_listView);
+        theListView.setAdapter(theAdapter);
 
+        //remove the waiting loading image background after loading hotels
+        ImageView loadingImg = (ImageView) findViewById(R.id.loading_temp_img);
+        loadingImg.setVisibility(View.GONE);
     }
 }

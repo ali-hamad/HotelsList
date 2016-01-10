@@ -3,22 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.hamad.ali.hotelslist.MainActivity">
 
     <ImageView
         android:id="@+id/loading_temp_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/yamsafer"
+        android:src="@drawable/yamsafer_loading"
         android:scaleType="fitXY"
         />
 
     <LinearLayout
+        android:id="@+id/tabs_view"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/tabs_view"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         >
@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:text="@string/all_hotels"
             android:gravity="center"
-            android:textStyle="bold" />
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

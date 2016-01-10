@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Ali on 1/9/2016.
+ *
+ * this is class will hold the hotel object
  */
 public class Hotel {
 
